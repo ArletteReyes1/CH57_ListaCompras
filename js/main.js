@@ -8,7 +8,16 @@ const alertValidacionesTexto = document.getElementById("alertValidacionesTexto")
 const tablaListaCompras = document.getElementById("tablaListaCompras");
 const cuerpoTabla = tablaListaCompras.getElementsByTagName("tbody").item(0);
 
+const contadorProductos = document.getElementById("contadorProductos");
+const productosTotal = document.getElementById("productosTotal");
+const precioTotal = document.getElementById("precioTotal");
+
+
+
 let cont = 0;
+let costoTotal = 0;
+let totalEnProductos = 0;
+
 
 
 //Cuando hay que hacer varias validaciones, mejor hacer una funcion
@@ -72,9 +81,16 @@ btnAgregar.addEventListener("click", function (event) {
 
 
     cuerpoTabla.insertAdjacentHTML("beforeend", row);
-    txtName.value = "";
+    contadorProductos.innerText=cont;
+    totalEnProductos += Number(txtNumber.value); //Constructor
+    productosTotal.innerText = totalEnProductos;
+    costoTotal += precio * Number(txtNumber.value);
+    //precioTotal.innerText = "$" + costoTotal.toFixed(2)  ////modo fácil
+    precioTotal.innerText =new Intl.NumberFormat("es-MX", 
+                    { style: "currency", currency: "MXN" }).format(costoTotal);
+    txtName.value = ""; //Limpia los campos una vez "agregado" el producto
     txtNumber.value = "";
-    txtName.focus();
+    txtName.focus(); // Borde color azul y cursor en campo para escribir,  despues de llenar los campos y agregarlo
 
   }//isValid
 
