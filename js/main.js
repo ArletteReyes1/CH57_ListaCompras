@@ -5,59 +5,81 @@ const btnClear = document.getElementById("btnClear");
 
 const alertValidaciones = document.getElementById("alertValidaciones");
 const alertValidacionesTexto = document.getElementById("alertValidacionesTexto");
+const tablaListaCompras = document.getElementById("tablaListaCompras");
+const cuerpoTabla = tablaListaCompras.getElementsByTagName("tbody").item(0);
+
+let cont = 0;
 
 
 //Cuando hay que hacer varias validaciones, mejor hacer una funcion
-function validarCantidad(){
-    if(txtNumber.value.length==0){
-        return false;
-    } //Que tenga información
+function validarCantidad() {
+  if (txtNumber.value.length == 0) {
+    return false;
+  } //Que tenga información
 
-  if(isNaN(txtNumber.value)){
+  if (isNaN(txtNumber.value)) {
     return false;
   }// Tiene que ser un número
 
-  if(Number(txtNumber.value)<=0){
+  if (Number(txtNumber.value) <= 0) {
     return false;
   }// Número mayor de 0 
-    
-    return true;
+
+  return true;
 } //validar Cantidad
 
-function getPrecio(){
-  return Math.round(Math.random() * 10000) /100;
+function getPrecio() {
+  return Math.round(Math.random() * 10000) / 100;
 }//getPrecio
 
 
-btnAgregar.addEventListener("click", function(event){
-    event.preventDefault();
-            alertValidacionesTexto.innerHTML="";
-            alertValidaciones.style.display="none"; //Limpia el texto cuando presiono el boton de agregar con todos los campos correctos, me quita las alertas cuando anteriormente no coloque adecuadamente los espcaios
-            txtName.style.border="";
-            txtNumber.style.border="";
-    //Name ¿Que le tendria que validad? 
-    // //Que tenga info, por lo menos 3 letras
-    if(txtName.value.length<3) {
-            txtName.style.border="thin red solid"; //si pongo thick el borde es grueso, medium es medio
+btnAgregar.addEventListener("click", function (event) {
+  event.preventDefault();
+  let isValid = true;
+  alertValidacionesTexto.innerHTML = "";
+  alertValidaciones.style.display = "none"; //Limpia el texto cuando presiono el boton de agregar con todos los campos correctos, me quita las alertas cuando anteriormente no coloque adecuadamente los espcaios
+  txtName.style.border = "";
+  txtNumber.style.border = "";
+  //Name ¿Que le tendria que validad? 
+  // //Que tenga info, por lo menos 3 letras
+  if (txtName.value.length < 3) {
+    txtName.style.border = "thin red solid"; //si pongo thick el borde es grueso, medium es medio
 
-            // mensaje de error cuando sea menor que 3.
-            alertValidacionesTexto.innerHTML=
-            "<strong> El Nombre del producto no es correcto. </strong>";
-            alertValidaciones.style.display="block";
-    }// menor de 3
+    // mensaje de error cuando sea menor que 3.
+    alertValidacionesTexto.innerHTML =
+      "<strong> El Nombre del producto no es correcto. </strong>";
+    alertValidaciones.style.display = "block";
+    isValid = false;
+  }// menor de 3
 
-    if(! validarCantidad()){ //No validar cantidad = Validar cantidad es falso
-        txtNumber.style.border="thin red solid";
-        alertValidacionesTexto.innerHTML += 
-        "<strong> La Cantidad del producto no es correcto. </strong>"; //El + es para agregar aparte del que primer innerHTML este otro
-        alertValidaciones.style.display="block";
-    }//validarCantidad
+  if (!validarCantidad()) { //No validar cantidad = Validar cantidad es falso
+    txtNumber.style.border = "thin red solid";
+    alertValidacionesTexto.innerHTML +=
+      "<strong> La Cantidad del producto no es correcto. </strong>"; //El + es para agregar aparte del que primer innerHTML este otro
+    alertValidaciones.style.display = "block";
+    isValid = false;
+  }//validarCantidad
+  if (isValid) {
+    //Agregar los elementos a la tabla
+    cont++; 
+    let precio = getPrecio();
+    let row = `<tr>
+                  <td>${cont}</td>
+                  <td>${txtName.value}</td>
+                  <td>${txtNumber.value}</td>
+                  <td>${precio}</td>
+              </tr>`;
 
-    //Number ¿Que tengo que validar?
-    //Tener info, 
-    // Número mayor de 0 
-    // Tiene que ser un número
+
+    cuerpoTabla.insertAdjacentHTML("beforeend", row);
+    txtName.value = "";
+    txtNumber.value = "";
+    txtName.focus();
+
+  }//isValid
 
 
 
 }); //btnAgregar
+
+//<></>
