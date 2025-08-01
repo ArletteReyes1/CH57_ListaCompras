@@ -89,7 +89,6 @@ btnAgregar.addEventListener("click", function (event) {
     datos.push(elemento);
     localStorage.setItem("datos", JSON.stringify(datos));
 
-
     cuerpoTabla.insertAdjacentHTML("beforeend", row);
     contadorProductos.innerText=cont;
     totalEnProductos += Number(txtNumber.value); //Constructor
@@ -98,7 +97,6 @@ btnAgregar.addEventListener("click", function (event) {
     //precioTotal.innerText = "$" + costoTotal.toFixed(2)  ////modo fácil
     precioTotal.innerText =new Intl.NumberFormat("es-MX", 
                     { style: "currency", currency: "MXN" }).format(costoTotal);
-
     let resumen = {
       "cont" : cont,
       "totalEnProductos" : totalEnProductos,
@@ -117,3 +115,32 @@ btnAgregar.addEventListener("click", function (event) {
 }); //btnAgregar
 
 //<></>
+
+window.addEventListener("load", function(event){
+  event.preventDefault();
+  if(this.localStorage.getItem("datos")!=null){ //Evalua el campo para saber si hay info ahi, si esta vacio no hace nada.
+    datos = JSON.parse(this.localStorage.getItem("datos"));
+    datos.forEach( (dato) => {
+           let row = `<tr>
+                  <td>${dato.cont}</td>
+                  <td>${dato.nombre}</td>
+                  <td>${dato.cantidad}</td>
+                  <td>${dato.precio}</td>
+              </tr>
+              `;
+              cuerpoTabla.insertAdjacentHTML("beforeend", row);
+         });//forEach
+      
+    };//datos !=null
+  if(this.localStorage.getItem("resumen")!=null){
+    let resumen = JSON.parse(this.localStorage.getItem("resumen")); //Se convierte en Objeto 
+    costoTotal = resumen.costoTotal;
+    totalEnProductos = resumen.totalEnProductos;
+    cont = resumen.cont;
+};//resumen !=null!
+    contadorProductos.innerText=cont;
+    productosTotal.innerText = totalEnProductos;
+    precioTotal.innerText =new Intl.NumberFormat("es-MX", 
+                    { style: "currency", currency: "MXN" }).format(costoTotal);
+  
+}); //Window load
