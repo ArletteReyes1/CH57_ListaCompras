@@ -71,7 +71,7 @@ btnAgregar.addEventListener("click", function (event) {
   }//validarCantidad
   if (isValid) {
     //Agregar los elementos a la tabla
-    cont++; 
+    cont++;
     let precio = getPrecio();
     let row = `<tr>
                   <td>${cont}</td>
@@ -81,26 +81,26 @@ btnAgregar.addEventListener("click", function (event) {
               </tr>`;
 
     let elemento = {
-      "cont" : cont,
-      "nombre" : txtName.value,
-      "cantidad" : txtNumber.value,
-      "precio" : precio, 
+      "cont": cont,
+      "nombre": txtName.value,
+      "cantidad": txtNumber.value,
+      "precio": precio,
     };
     datos.push(elemento);
     localStorage.setItem("datos", JSON.stringify(datos));
 
     cuerpoTabla.insertAdjacentHTML("beforeend", row);
-    contadorProductos.innerText=cont;
+    contadorProductos.innerText = cont;
     totalEnProductos += Number(txtNumber.value); //Constructor
     productosTotal.innerText = totalEnProductos;
     costoTotal += precio * Number(txtNumber.value);
     //precioTotal.innerText = "$" + costoTotal.toFixed(2)  ////modo fácil
-    precioTotal.innerText =new Intl.NumberFormat("es-MX", 
-                    { style: "currency", currency: "MXN" }).format(costoTotal);
+    precioTotal.innerText = new Intl.NumberFormat("es-MX",
+      { style: "currency", currency: "MXN" }).format(costoTotal);
     let resumen = {
-      "cont" : cont,
-      "totalEnProductos" : totalEnProductos,
-      "costoTotal" : costoTotal,
+      "cont": cont,
+      "totalEnProductos": totalEnProductos,
+      "costoTotal": costoTotal,
     }
     localStorage.setItem("resumen", JSON.stringify(resumen));
 
@@ -116,31 +116,64 @@ btnAgregar.addEventListener("click", function (event) {
 
 //<></>
 
-window.addEventListener("load", function(event){
+window.addEventListener("load", function (event) {
   event.preventDefault();
-  if(this.localStorage.getItem("datos")!=null){ //Evalua el campo para saber si hay info ahi, si esta vacio no hace nada.
+  if (this.localStorage.getItem("datos") != null) { //Evalua el campo para saber si hay info ahi, si esta vacio no hace nada.
     datos = JSON.parse(this.localStorage.getItem("datos"));
-    datos.forEach( (dato) => {
-           let row = `<tr>
+    datos.forEach((dato) => {
+      let row = `<tr>
                   <td>${dato.cont}</td>
                   <td>${dato.nombre}</td>
                   <td>${dato.cantidad}</td>
                   <td>${dato.precio}</td>
               </tr>
               `;
-              cuerpoTabla.insertAdjacentHTML("beforeend", row);
-         });//forEach
-      
-    };//datos !=null
-  if(this.localStorage.getItem("resumen")!=null){
+      cuerpoTabla.insertAdjacentHTML("beforeend", row);
+    });//forEach
+
+  };//datos !=null
+  if (this.localStorage.getItem("resumen") != null) { //Valida que los valores existan
     let resumen = JSON.parse(this.localStorage.getItem("resumen")); //Se convierte en Objeto 
     costoTotal = resumen.costoTotal;
     totalEnProductos = resumen.totalEnProductos;
     cont = resumen.cont;
-};//resumen !=null!
-    contadorProductos.innerText=cont;
-    productosTotal.innerText = totalEnProductos;
-    precioTotal.innerText =new Intl.NumberFormat("es-MX", 
-                    { style: "currency", currency: "MXN" }).format(costoTotal);
-  
+  };//resumen !=null!
+  contadorProductos.innerText = cont;
+  productosTotal.innerText = totalEnProductos;
+  precioTotal.innerText = new Intl.NumberFormat("es-MX",
+    { style: "currency", currency: "MXN" }).format(costoTotal);
+
 }); //Window load
+
+
+
+
+btnClear. addEventListener("click", function (event) {
+  event.preventDefault();
+  //1. Eliminar el storage
+  localStorage.removeItem("datos");
+  localStorage.removeItem("resumen");
+  //2. Limpiar la tabla
+  cuerpoTabla.innerHTML = "";
+  //3 Limpiar los campos
+  txtName.value = ""; //Limpia los campos una vez "Limpiar " el producto
+  txtNumber.value = "";
+  txtName.focus();
+  //4. Limpiar el borde de los campos //Limpia el texto cuando presiono el boton de agregar con todos los campos correctos, me quita las alertas cuando anteriormente no coloque adecuadamente los espcaios
+  txtName.style.border = "";
+  txtNumber.style.border = "";
+  //5. Limpiar los alerts
+  alertValidacionesTexto.innerHTML = "";
+  alertValidaciones.style.display = "none";
+  //6. Limpiar el Resumen
+  cont = 0;
+  costoTotal = 0;
+  totalEnProductos = 0;
+
+  contadorProductos.innerText = cont;
+  productosTotal.innerText = totalEnProductos;
+  precioTotal.innerText = new Intl.NumberFormat("es-MX",
+    { style: "currency", currency: "MXN" }).format(costoTotal);
+
+    datos = new Array();
+})//Limpiar todo
