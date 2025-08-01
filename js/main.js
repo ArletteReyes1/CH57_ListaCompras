@@ -18,6 +18,7 @@ let cont = 0;
 let costoTotal = 0;
 let totalEnProductos = 0;
 
+let datos = new Array(); // Use el constructor Array pero pudo tambien funcionar con [];
 
 
 //Cuando hay que hacer varias validaciones, mejor hacer una funcion
@@ -79,6 +80,15 @@ btnAgregar.addEventListener("click", function (event) {
                   <td>${precio}</td>
               </tr>`;
 
+    let elemento = {
+      "cont" : cont,
+      "nombre" : txtName.value,
+      "cantidad" : txtNumber.value,
+      "precio" : precio, 
+    };
+    datos.push(elemento);
+    localStorage.setItem("datos", JSON.stringify(datos));
+
 
     cuerpoTabla.insertAdjacentHTML("beforeend", row);
     contadorProductos.innerText=cont;
@@ -88,6 +98,14 @@ btnAgregar.addEventListener("click", function (event) {
     //precioTotal.innerText = "$" + costoTotal.toFixed(2)  ////modo fácil
     precioTotal.innerText =new Intl.NumberFormat("es-MX", 
                     { style: "currency", currency: "MXN" }).format(costoTotal);
+
+    let resumen = {
+      "cont" : cont,
+      "totalEnProductos" : totalEnProductos,
+      "costoTotal" : costoTotal,
+    }
+    localStorage.setItem("resumen", JSON.stringify(resumen));
+
     txtName.value = ""; //Limpia los campos una vez "agregado" el producto
     txtNumber.value = "";
     txtName.focus(); // Borde color azul y cursor en campo para escribir,  despues de llenar los campos y agregarlo
